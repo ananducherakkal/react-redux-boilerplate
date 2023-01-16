@@ -1,8 +1,19 @@
-import { configureStore } from '@reduxjs/toolkit'
-import counterReducer from './counter'
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit"
+import createSagaMiddleware from "redux-saga";
+import saga from "./saga"
+import reducer from "./reducer"
 
-export const store = configureStore({
-  reducer: {
-    counter: counterReducer
-  },
-})
+export default function configStore () {
+  const sagaMiddleware = createSagaMiddleware();
+  const middleware = [...getDefaultMiddleware({ thunk: false }), sagaMiddleware];
+
+  const store = configureStore({
+    reducer,
+    middleware
+  })
+  console.log('yes')
+  sagaMiddleware.run(saga);
+  console.log('no')
+  return store
+}
+
